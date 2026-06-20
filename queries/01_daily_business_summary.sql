@@ -26,6 +26,7 @@ select d.order_date
 ,r.refund_amount
 ,(d.revenue-lag(d.revenue,1) over(order by d.order_date))/nullif(lag(d.revenue,1) over(order by d.order_date),0) as revenue_vs_yesterday_pct
 ,(d.revenue-lag(d.revenue,7) over(order by d.order_date))/nullif(lag(d.revenue,7) over(order by d.order_date),0) as revenue_vs_weekly_pct
-from daily_orders d join daily_refunds r
+from daily_orders d 
+left join daily_refunds r
 on d.order_date = r.order_date
 order by d.order_date asc
