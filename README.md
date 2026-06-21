@@ -1,0 +1,1 @@
+This repo contains 10 analytical SQL queries written against an e-commerce dataset (ecom schema), their raw outputs, and a structured interpretation of each — covering what the query computes, why it's written the way it is, what the numbers mean for the business, and what's still unresolved or worth a follow-up.
