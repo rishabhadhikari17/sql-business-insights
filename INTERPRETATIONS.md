@@ -48,13 +48,16 @@ Is "direct" supposed to be a meaningful bucket (typed-URL/bookmark traffic) or i
 ## Q4 — Top Products by Net Revenue (After Refunds)
 
 **What the query does (1 sentence):** 
- Ranks products by net revenue (gross revenue minus refunds), built by flattening product → variant → order_item, then separately joining refunds (status='succeeded') and returns (status='approved') at the order level.
+Computes gross revenue, refunds, and net revenue per product by pre-aggregating order-level revenue, refunds, and returns separately before joining — answering the CFO's "which products actually make money net of returns."l.
  
 **Pattern choice (1–2 sentences):**
-Chaining CTEs to flatten the product hierarchy before joining transactional data is reasonable, but refunds and returns live at the order grain while this report needs the product grain — joining them in on order_id without apportioning, then collapsing with MAX(refund_amount) instead of SUM, is the wrong pattern for multi-item orders or orders with more than one refund event.
+ Three independently-aggregated CTEs (product_orders, order_refunds, order_returns) joined on order_id at the end, each already deduplicated to one row per order — matches the spec's pattern note exactly, and COALESCE(...,0) means every product gets a real number instead of NULL.
 
 **Business interpretation (2–3 sentences):** 
+Smartwatch and Headphones products own the top of the leaderboard — Eastlight Clarity ANC Headphones leads at ₹9.18L net revenue, with Smartwatch as the single biggest category overall at ₹62.8M net revenue, nearly double Headphones (₹39.9M) and Speakers (₹34.5M). Refund rates split sharply by category: Makeup (4.86%), Haircare (4.68%), Skincare (3.05%), and Accessories (3.06%) 
+
 **What I'd ask next:**
+- For those 11 negative-net-revenue products specifically, can we pull the actual order contents to confirm they co-occurred in multi-item orders with a separately-refunded item.
 
 
 ## Q5 — Category Health: Purchases → Returns
@@ -129,7 +132,6 @@ Median time to repeat purchase is 6 days, but the mean is 10.58 days and P90 is 
 
 **What I'd ask next:**
 -  What's the actual repeat purchase rate — i.e., 3,418 out of how many total customers with a first order — so this gap metric has a denominator to sit alongside?
--  
 
 ## Q10 — Attribution Comparison: First-Touch vs Last-Touch Revenue by Channel
 
