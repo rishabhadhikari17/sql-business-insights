@@ -7,8 +7,7 @@ select c.customer_id
 from ecom.customers c
 left join 
 ecom.orders o
-on c.customer_id = o.customer_id
-where lower(o.status) != 'cancelled'
+on c.customer_id = o.customer_id and lower(o.status) != 'cancelled'
 group by 1
 )
 , customer_ltv as (
