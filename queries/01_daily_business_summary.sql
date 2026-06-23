@@ -3,8 +3,8 @@ select
 date_trunc('day',created_at)::date as order_date
 ,sum(total) as revenue
 , count(*) as orders
-, sum(case when lower(status) = 'paid' then 1 else 0 end) as paid_orders
-, sum(case when lower(status) = 'cancelled' then 1 else 0 end) as cancelled_orders
+, sum(case when lower(payment_status) = 'paid' then 1 else 0 end) as paid_orders
+, sum(case when lower(payment_status) = 'cancelled' then 1 else 0 end) as cancelled_orders
 from ecom.orders
 group by 1
 )
@@ -30,3 +30,6 @@ from daily_orders d
 left join daily_refunds r
 on d.order_date = r.order_date
 order by d.order_date asc
+
+
+
