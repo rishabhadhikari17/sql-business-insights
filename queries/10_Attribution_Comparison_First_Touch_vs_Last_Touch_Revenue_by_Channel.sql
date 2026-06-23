@@ -16,8 +16,8 @@ where lower(o.status) != 'cancelled'
 , attribution_models as (
 select
 *
-,row_number() over(partition by customer_id order by touched_at asc) as rn_first
-,row_number() over(partition by customer_id order by touched_at desc) as rn_last 
+,row_number() over(partition by order_id order by touched_at asc) as rn_first
+,row_number() over(partition by order_id order by touched_at desc) as rn_last 
 from touches
 )
 ,first_touch as (
